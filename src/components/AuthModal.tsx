@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { signUp, signIn, initAuth } from "@/store/auth";
 
 export function openAuth(mode: 'signin' | 'signup' = 'signin') {
   window.dispatchEvent(new CustomEvent('open-auth', { detail: { mode } }))
@@ -12,14 +13,18 @@ export default function AuthModal() {
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [serverError, setServerError] = useState('')
 
   useEffect(() => {
+    initAuth()
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail
       setMode(detail?.mode || 'signin')
       setErrors({})
       setSubmitted(false)
+      setServerError('')
       setEmail('')
       setPassword('')
       setName('')
@@ -39,15 +44,32 @@ export default function AuthModal() {
     const errs: Record<string, string> = {}
     if (!email.trim()) errs.email = 'Email is required'
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = 'Invalid email'
-    if (!password || password.length < 6) errs.password = 'Password must be at least 6 characters'
+    if (!password) errs.password = 'Password is required'
+    else if (password.length < 6) errs.password = 'Password must be at least 6 characters'
     if (mode === 'signup' && !name.trim()) errs.name = 'Name is required'
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validate()) return
+    setLoading(true)
+    setServerError('')
+
+    await new Promise((r) => setTimeout(r, 600))
+
+    const err = mode === 'signin'
+      ? signIn(email, password)
+      : signUp(name, email, password)
+
+    if (err) {
+      setServerError(err)
+      setLoading(false)
+      return
+    }
+
+    setLoading(false)
     setSubmitted(true)
   }
 
@@ -66,13 +88,15 @@ export default function AuthModal() {
         <div className="p-8 pt-10">
           <div className="flex mb-8 bg-gray-100 rounded-xl p-1">
             <button
-              onClick={() => { setMode('signin'); setErrors({}); setSubmitted(false) }}
+              type="button"
+              onClick={() => { setMode('signin'); setErrors({}); setSubmitted(false); setServerError('') }}
               className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${mode === 'signin' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Sign In
             </button>
             <button
-              onClick={() => { setMode('signup'); setErrors({}); setSubmitted(false) }}
+              type="button"
+              onClick={() => { setMode('signup'); setErrors({}); setSubmitted(false); setServerError('') }}
               className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${mode === 'signup' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Sign Up
@@ -92,14 +116,19 @@ export default function AuthModal() {
               <p className="mt-1 text-sm text-gray-500">
                 {mode === 'signin'
                   ? 'You have been signed in successfully.'
-                  : 'Please check your email to verify your account.'}
+                  : 'Your account has been created. You are now signed in.'}
               </p>
-              <button onClick={close} className="mt-6 px-6 py-2.5 text-sm font-semibold text-white bg-gray-900 rounded-xl hover:bg-gray-800 transition-all">
+              <button type="button" onClick={close} className="mt-6 px-6 py-2.5 text-sm font-semibold text-white bg-gray-900 rounded-xl hover:bg-gray-800 transition-all">
                 Continue
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
+              {serverError && (
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-600">
+                  {serverError}
+                </div>
+              )}
               {mode === 'signup' && (
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1.5">Full Name</label>
@@ -135,14 +164,24 @@ export default function AuthModal() {
                 />
                 {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
               </div>
-              <button type="submit" className="w-full py-3 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-xl transition-all hover:shadow-lg hover:shadow-gray-900/25">
-                {mode === 'signin' ? 'Sign In' : 'Create Account'}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-xl transition-all hover:shadow-lg hover:shadow-gray-900/25 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {loading && (
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                )}
+                {loading ? 'Please wait...' : mode === 'signin' ? 'Sign In' : 'Create Account'}
               </button>
               <p className="text-xs text-gray-400 text-center">
                 {mode === 'signin' ? (
-                  <>Don&apos;t have an account? <button type="button" onClick={() => { setMode('signup'); setErrors({}) }} className="text-amber-600 font-semibold hover:underline">Sign Up</button></>
+                  <>Don&apos;t have an account? <button type="button" onClick={() => { setMode('signup'); setErrors({}); setServerError('') }} className="text-amber-600 font-semibold hover:underline">Sign Up</button></>
                 ) : (
-                  <>Already have an account? <button type="button" onClick={() => { setMode('signin'); setErrors({}) }} className="text-amber-600 font-semibold hover:underline">Sign In</button></>
+                  <>Already have an account? <button type="button" onClick={() => { setMode('signin'); setErrors({}); setServerError('') }} className="text-amber-600 font-semibold hover:underline">Sign In</button></>
                 )}
               </p>
             </form>

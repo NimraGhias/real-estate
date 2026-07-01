@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { openAuth } from './AuthModal'
+import { getCurrentUser, subscribeAuth, signOut } from '@/store/auth'
 
 const navLinks = [
   { label: 'Home', href: '#home' },
@@ -14,12 +15,15 @@ const navLinks = [
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [user, setUser] = useState(getCurrentUser)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  useEffect(() => subscribeAuth(() => setUser(getCurrentUser())), [])
 
   return (
     <header
@@ -64,18 +68,36 @@ export default function Header() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
-            <button onClick={() => openAuth('signin')} className={`px-4 py-2 text-sm font-medium transition-colors ${
-              scrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white/80 hover:text-white'
-            }`}>
-              Sign In
-            </button>
-            <button onClick={() => openAuth('signup')} className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all ${
-              scrolled
-                ? 'bg-gray-900 text-white hover:bg-gray-800 shadow-lg shadow-gray-900/20'
-                : 'bg-white text-gray-900 hover:bg-gray-100 shadow-lg shadow-black/10'
-            }`}>
-              Get Started
-            </button>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className={`text-sm font-medium ${scrolled ? 'text-gray-700' : 'text-white/80'}`}>
+                  {user.name}
+                </span>
+                <button
+                  onClick={() => { signOut() }}
+                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                    scrolled ? 'text-gray-500 hover:text-gray-700' : 'text-white/60 hover:text-white/80'
+                  }`}
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <>
+                <button onClick={() => openAuth('signin')} className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  scrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white/80 hover:text-white'
+                }`}>
+                  Sign In
+                </button>
+                <button onClick={() => openAuth('signup')} className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all ${
+                  scrolled
+                    ? 'bg-gray-900 text-white hover:bg-gray-800 shadow-lg shadow-gray-900/20'
+                    : 'bg-white text-gray-900 hover:bg-gray-100 shadow-lg shadow-black/10'
+                }`}>
+                  Get Started
+                </button>
+              </>
+            )}
           </div>
 
           <button
@@ -112,12 +134,26 @@ export default function Header() {
               </a>
             ))}
             <div className="pt-3 flex flex-col gap-2">
-              <button onClick={() => { setMobileOpen(false); openAuth('signin') }} className="w-full py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-50">
-                Sign In
-              </button>
-              <button onClick={() => { setMobileOpen(false); openAuth('signup') }} className="w-full py-2.5 text-sm font-semibold text-white bg-gray-900 rounded-xl hover:bg-gray-800">
-                Get Started
-              </button>
+              {user ? (
+                <>
+                  <span className="text-sm font-medium text-gray-700 px-1">{user.name}</span>
+                  <button
+                    onClick={() => { setMobileOpen(false); signOut() }}
+                    className="w-full py-2.5 text-sm font-medium text-gray-500 border border-gray-200 rounded-xl hover:bg-gray-50"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button onClick={() => { setMobileOpen(false); openAuth('signin') }} className="w-full py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-50">
+                    Sign In
+                  </button>
+                  <button onClick={() => { setMobileOpen(false); openAuth('signup') }} className="w-full py-2.5 text-sm font-semibold text-white bg-gray-900 rounded-xl hover:bg-gray-800">
+                    Get Started
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
