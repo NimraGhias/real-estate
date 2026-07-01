@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const listings = [
   {
     id: 1,
@@ -71,9 +73,48 @@ const listings = [
     tag: 'New',
     agent: 'David Kim',
   },
+  {
+    id: 7,
+    title: 'Mountain Retreat Cabin',
+    location: 'Aspen, CO',
+    price: '$3,600,000',
+    beds: 4,
+    baths: 3,
+    sqft: '3,100',
+    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=85',
+    tag: 'Featured',
+    agent: 'Rachel Green',
+  },
+  {
+    id: 8,
+    title: 'Minimalist Urban Loft',
+    location: 'Chicago, IL',
+    price: '$1,200,000',
+    beds: 2,
+    baths: 2,
+    sqft: '1,400',
+    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=85',
+    tag: 'Reduced',
+    agent: 'Tom Brooks',
+  },
+  {
+    id: 9,
+    title: 'Mediterranean Villa',
+    location: 'Santa Barbara, CA',
+    price: '$7,800,000',
+    beds: 6,
+    baths: 5,
+    sqft: '6,500',
+    image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&q=85',
+    tag: 'Premium',
+    agent: 'Sophia Lee',
+  },
 ]
 
 export default function FeaturedListings() {
+  const [showAll, setShowAll] = useState(false)
+  const displayed = showAll ? listings : listings.slice(0, 6)
+
   return (
     <section id="listings" className="py-24 lg:py-32 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -88,7 +129,7 @@ export default function FeaturedListings() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {listings.map((property) => (
+          {displayed.map((property) => (
             <div
               key={property.id}
               className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-gray-900/10 transition-all duration-500 hover:-translate-y-1"
@@ -163,12 +204,15 @@ export default function FeaturedListings() {
         </div>
 
         <div className="mt-14 text-center">
-          <a href="#listings" className="px-10 py-3.5 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-xl transition-all hover:shadow-xl hover:shadow-gray-900/25 inline-flex items-center gap-2">
-            View All Properties
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="px-10 py-3.5 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-xl transition-all hover:shadow-xl hover:shadow-gray-900/25 inline-flex items-center gap-2"
+          >
+            {showAll ? 'Show Less' : 'View All Properties'}
+            <svg className={`w-4 h-4 transition-transform duration-300 ${showAll ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
-          </a>
+          </button>
         </div>
       </div>
     </section>
