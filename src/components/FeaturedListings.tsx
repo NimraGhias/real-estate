@@ -425,7 +425,7 @@ export default function FeaturedListings() {
 
               <div className="mt-6 pt-6 border-t border-gray-100 flex gap-3">
                 <button
-                  onClick={() => { setSelected(null); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) }}
+                  onClick={() => { setSelected(null); window.location.href = '/consultation' }}
                   className="flex-1 py-3 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-xl transition-all hover:shadow-lg hover:shadow-gray-900/25"
                 >
                   Inquire About This Property
