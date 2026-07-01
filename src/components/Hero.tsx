@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const locations = ['Any Location', 'New York, NY', 'Los Angeles, CA', 'Miami, FL', 'Chicago, IL']
+const locations = ['Any Location', 'New York', 'Los Angeles', 'Miami', 'Chicago']
 const types = ['All Types', 'House', 'Apartment', 'Villa', 'Condo']
 const prices = ['Any Price', '$100k — $300k', '$300k — $500k', '$500k — $1M', '$1M+']
 
@@ -33,6 +33,7 @@ export default function Hero() {
     if (prc && prc !== 'any') params.set('price', prc)
     const qs = params.toString()
     window.history.pushState(null, '', qs ? `?${qs}` : window.location.pathname)
+    window.dispatchEvent(new PopStateEvent('popstate'))
     document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' })
   }
 
