@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { openAuth } from './AuthModal'
 
 const navLinks = [
   { label: 'Home', href: '#home' },
@@ -63,12 +64,12 @@ export default function Header() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
-            <button className={`px-4 py-2 text-sm font-medium transition-colors ${
+            <button onClick={() => openAuth('signin')} className={`px-4 py-2 text-sm font-medium transition-colors ${
               scrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white/80 hover:text-white'
             }`}>
               Sign In
             </button>
-            <button className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all ${
+            <button onClick={() => openAuth('signup')} className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all ${
               scrolled
                 ? 'bg-gray-900 text-white hover:bg-gray-800 shadow-lg shadow-gray-900/20'
                 : 'bg-white text-gray-900 hover:bg-gray-100 shadow-lg shadow-black/10'
@@ -111,10 +112,10 @@ export default function Header() {
               </a>
             ))}
             <div className="pt-3 flex flex-col gap-2">
-              <button className="w-full py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-50">
+              <button onClick={() => { setMobileOpen(false); openAuth('signin') }} className="w-full py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-50">
                 Sign In
               </button>
-              <button className="w-full py-2.5 text-sm font-semibold text-white bg-gray-900 rounded-xl hover:bg-gray-800">
+              <button onClick={() => { setMobileOpen(false); openAuth('signup') }} className="w-full py-2.5 text-sm font-semibold text-white bg-gray-900 rounded-xl hover:bg-gray-800">
                 Get Started
               </button>
             </div>

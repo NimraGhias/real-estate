@@ -1,11 +1,13 @@
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Chatbot from '@/components/Chatbot'
+import AuthModal from '@/components/AuthModal'
 
 export default function ConsultationPage() {
   return (
     <>
       <Header />
+      <AuthModal />
       <main className="min-h-screen pt-24 pb-16 bg-gray-50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">

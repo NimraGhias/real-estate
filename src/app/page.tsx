@@ -7,6 +7,7 @@ import Testimonials from '@/components/Testimonials'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import Chatbot from '@/components/Chatbot'
+import AuthModal from '@/components/AuthModal'
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
       </main>
       <Footer />
       <Chatbot />
+      <AuthModal />
     </>
   )
 }
