@@ -1,15 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { openAuth } from './AuthModal'
 import { getCurrentUser, subscribeAuth, signOut } from '@/store/auth'
 
 const navLinks = [
-  { label: 'Home', href: '#home' },
-  { label: 'Listings', href: '#listings' },
-  { label: 'Services', href: '#services' },
-  { label: 'Testimonials', href: '#testimonials' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Home', href: '/' },
+  { label: 'Listings', href: '/#listings' },
+  { label: 'Services', href: '/#services' },
+  { label: 'Testimonials', href: '/#testimonials' },
+  { label: 'Contact', href: '/#contact' },
 ]
 
 export default function Header() {
@@ -35,7 +36,7 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          <a href="#" className="flex items-center gap-2.5 group">
+          <Link href="/" className="flex items-center gap-2.5 group">
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
               scrolled ? 'bg-gray-900' : 'bg-white/20 backdrop-blur-sm'
             }`}>
@@ -49,11 +50,11 @@ export default function Header() {
             }`}>
               EstateHub
             </span>
-          </a>
+          </Link>
 
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.label}
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${
@@ -63,7 +64,7 @@ export default function Header() {
                 }`}
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -124,14 +125,14 @@ export default function Header() {
         <div className="lg:hidden border-t border-gray-100 bg-white/95 backdrop-blur-xl">
           <div className="px-4 py-4 space-y-3">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
                 className="block py-2 text-sm font-medium text-gray-600 hover:text-gray-900"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
             <div className="pt-3 flex flex-col gap-2">
               {user ? (

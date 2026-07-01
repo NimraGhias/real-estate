@@ -68,6 +68,17 @@ export default function ConsultationPage() {
           </div>
         </div>
       </main>
+      <div className="pb-16 text-center">
+        <a
+          href="/"
+          className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Home Page
+        </a>
+      </div>
       <Footer />
       <Chatbot />
     </>
