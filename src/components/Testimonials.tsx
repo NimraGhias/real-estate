@@ -66,26 +66,24 @@ export default function Testimonials() {
                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151C7.546 6.068 5.983 8.789 5.983 11H10v10H0z" />
               </svg>
 
-              <div className="relative min-h-[180px]">
-                {testimonials.map((t, i) => (
-                  <div
-                    key={i}
-                    className={`transition-all duration-500 ${
-                      i === active
-                        ? 'opacity-100 translate-x-0'
-                        : 'opacity-0 translate-x-8 absolute inset-0 pointer-events-none'
-                    }`}
-                  >
-                    <p className="text-xl sm:text-2xl text-white/90 leading-relaxed">&ldquo;{t.content}&rdquo;</p>
-                    <div className="mt-8 flex items-center gap-4">
-                      <img src={t.image} alt={t.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-amber-400/50" />
-                      <div>
-                        <p className="text-base font-semibold text-white">{t.name}</p>
-                        <p className="text-sm text-amber-400/80">{t.role}</p>
+              <div className="overflow-hidden">
+                <div
+                  className="flex transition-transform duration-500 ease-in-out"
+                  style={{ transform: `translateX(-${active * 100}%)` }}
+                >
+                  {testimonials.map((t, i) => (
+                    <div key={i} className="min-w-full">
+                      <p className="text-xl sm:text-2xl text-white/90 leading-relaxed">&ldquo;{t.content}&rdquo;</p>
+                      <div className="mt-8 flex items-center gap-4">
+                        <img src={t.image} alt={t.name} className="w-12 h-12 rounded-full object-cover ring-2 ring-amber-400/50" />
+                        <div>
+                          <p className="text-base font-semibold text-white">{t.name}</p>
+                          <p className="text-sm text-amber-400/80">{t.role}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
 
               <div className="mt-8 flex items-center justify-between">
