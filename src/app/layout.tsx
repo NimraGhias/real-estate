@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "EstateHub — Find Your Dream Home",
   description: "Premium real estate services. Discover exceptional properties in prime locations. We help you find the perfect place to call home.",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
