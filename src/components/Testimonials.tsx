@@ -24,6 +24,20 @@ const testimonials = [
     rating: 5,
     image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80',
   },
+  {
+    name: 'David Thompson',
+    role: 'Property Developer',
+    content: 'The valuation and market insights provided by EstateHub were instrumental in our latest development project. Their data-driven approach gave us the confidence to move forward with precision and clarity.',
+    rating: 5,
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80',
+  },
+  {
+    name: 'Lisa Park',
+    role: 'Luxury Home Seller',
+    content: 'Selling my luxury property required a special touch, and EstateHub delivered beyond expectations. Their staging expertise, photography, and network of qualified buyers resulted in a sale above asking price.',
+    rating: 5,
+    image: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=100&q=80',
+  },
 ]
 
 export default function Testimonials() {
@@ -74,17 +88,39 @@ export default function Testimonials() {
                 ))}
               </div>
 
-              <div className="mt-8 flex items-center gap-3">
-                {testimonials.map((_, i) => (
+              <div className="mt-8 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {testimonials.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setActive(i)}
+                      className={`h-2 rounded-full transition-all duration-500 ${
+                        i === active ? 'w-8 bg-amber-400' : 'w-2 bg-white/20 hover:bg-white/40'
+                      }`}
+                      aria-label={`Testimonial ${i + 1}`}
+                    />
+                  ))}
+                </div>
+                <div className="flex items-center gap-2">
                   <button
-                    key={i}
-                    onClick={() => setActive(i)}
-                    className={`h-2 rounded-full transition-all duration-500 ${
-                      i === active ? 'w-8 bg-amber-400' : 'w-2 bg-white/20 hover:bg-white/40'
-                    }`}
-                    aria-label={`Testimonial ${i + 1}`}
-                  />
-                ))}
+                    onClick={() => setActive(active === 0 ? testimonials.length - 1 : active - 1)}
+                    className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all border border-white/10 text-white/60 hover:text-white"
+                    aria-label="Previous"
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => setActive(active === testimonials.length - 1 ? 0 : active + 1)}
+                    className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all border border-white/10 text-white/60 hover:text-white"
+                    aria-label="Next"
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
