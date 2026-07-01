@@ -34,8 +34,8 @@ export default function Header() {
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
               scrolled ? 'bg-gray-900' : 'bg-white/20 backdrop-blur-sm'
             }`}>
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 21h18M6 21V7a2 2 0 012-2h8a2 2 0 012 2v14M9 21v-4a1 1 0 011-1h4a1 1 0 011 1v4M10 3h4" />
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
               </svg>
             </div>
             <span className={`text-xl font-bold tracking-tight transition-colors ${

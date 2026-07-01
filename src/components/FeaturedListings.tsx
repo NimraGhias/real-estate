@@ -67,7 +67,7 @@ const listings = [
     beds: 6,
     baths: 4,
     sqft: '5,200',
-    image: 'https://images.unsplash.com/photo-1613490493576-7fde19ac3473?w=600&q=85',
+    image: 'https://images.unsplash.com/photo-1605146769289-440113cc3d00?w=600&q=85',
     tag: 'New',
     agent: 'David Kim',
   },
