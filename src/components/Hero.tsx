@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { setFilters } from "@/store/search";
 
 const locations = ['Any Location', 'New York', 'Los Angeles', 'Miami', 'Chicago']
 const types = ['All Types', 'House', 'Apartment', 'Villa', 'Condo']
@@ -27,13 +28,11 @@ export default function Hero() {
     const loc = cleanLabel(location)
     const typ = cleanLabel(type)
     const prc = priceValues[price]
-    window.dispatchEvent(new CustomEvent('search-filters', {
-      detail: {
-        location: loc,
-        type: typ,
-        price: prc && prc !== 'any' ? prc : '',
-      }
-    }))
+    setFilters({
+      location: loc,
+      type: typ,
+      price: prc && prc !== 'any' ? prc : '',
+    })
     document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' })
   }
 

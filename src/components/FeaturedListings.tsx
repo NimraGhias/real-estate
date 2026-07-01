@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
+import { getFilters, subscribe } from "@/store/search";
 
 const allListings = [
   {
@@ -177,21 +178,10 @@ function parsePrice(p: string) {
 
 export default function FeaturedListings() {
   const [showAll, setShowAll] = useState(false)
-  const [filters, setFilters] = useState({ location: '', type: '', price: '' })
+  const [filters, setFilters] = useState(() => getFilters())
   const [selected, setSelected] = useState<typeof allListings[number] | null>(null)
 
-  useEffect(() => {
-    const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail
-      setFilters({
-        location: detail.location || '',
-        type: detail.type || '',
-        price: detail.price || '',
-      })
-    }
-    window.addEventListener('search-filters', handler)
-    return () => window.removeEventListener('search-filters', handler)
-  }, [])
+  useEffect(() => subscribe((f) => setFilters(f)), [])
 
   const filtered = useMemo(() => {
     return allListings.filter((p) => {
