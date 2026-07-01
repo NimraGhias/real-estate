@@ -60,106 +60,138 @@ const faqData: { keywords: string[]; answer: string }[] = [
 
 function getBotResponse(input: string): string {
   const lower = input.toLowerCase()
-
   for (const faq of faqData) {
     for (const keyword of faq.keywords) {
-      if (lower.includes(keyword)) {
-        return faq.answer
-      }
+      if (lower.includes(keyword)) return faq.answer
     }
   }
-
   return "I'm not sure I understand your question. Could you please rephrase it? You can ask me about properties, pricing, services, locations, or how to contact us!"
+}
+
+function TypingDots() {
+  return (
+    <div className="flex gap-1.5 px-4 py-3">
+      {[0, 1, 2].map((i) => (
+        <div
+          key={i}
+          className="w-2 h-2 bg-gray-400 rounded-full"
+          style={{
+            animation: `typing-dot 1.4s ease-in-out ${i * 0.2}s infinite`,
+          }}
+        />
+      ))}
+      <style>{`
+        @keyframes typing-dot {
+          0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+          30% { opacity: 1; transform: translateY(-4px); }
+        }
+      `}</style>
+    </div>
+  )
 }
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
-    {
-      role: 'bot',
-      content: "Hi there! I'm EstateHub's virtual assistant. Ask me anything about our properties and services!",
-    },
+    { role: 'bot', content: "Hi there! I'm EstateHub's virtual assistant. Ask me anything about our properties and services!" },
   ])
   const [input, setInput] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+  }, [messages, isTyping])
 
   function handleSend() {
     const trimmed = input.trim()
     if (!trimmed) return
 
     setMessages((prev) => [...prev, { role: 'user', content: trimmed }])
+    setInput('')
+    setIsTyping(true)
 
     setTimeout(() => {
       const response = getBotResponse(trimmed)
       setMessages((prev) => [...prev, { role: 'bot', content: response }])
-    }, 500)
-
-    setInput('')
+      setIsTyping(false)
+    }, 800 + Math.random() * 600)
   }
 
   function handleQuickQuestion(question: string) {
     setMessages((prev) => [...prev, { role: 'user', content: question }])
+    setIsTyping(true)
     setTimeout(() => {
       const response = getBotResponse(question)
       setMessages((prev) => [...prev, { role: 'bot', content: response }])
-    }, 500)
+      setIsTyping(false)
+    }, 800 + Math.random() * 600)
   }
 
   return (
     <>
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
-          <div className="bg-blue-900 p-4 text-white">
+        <div
+          className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
+          style={{ animation: 'fadeInUp 0.3s ease-out' }}
+        >
+          <div className="bg-gray-950 p-4 text-white">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-amber-500 rounded-full flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-5 h-5 text-gray-950" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </div>
                 <div>
                   <p className="text-sm font-semibold">EstateHub Assistant</p>
-                  <p className="text-xs text-blue-200">Online</p>
+                  <p className="text-xs text-emerald-400 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                    Online
+                  </p>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="p-1 hover:bg-blue-800 rounded-lg transition-colors">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <button onClick={() => setIsOpen(false)} className="p-1.5 hover:bg-gray-800 rounded-lg transition-colors">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
           </div>
 
-          <div className="h-80 overflow-y-auto p-4 space-y-3">
+          <div className="h-80 overflow-y-auto p-4 space-y-3 bg-gray-50/50">
             {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}>
                 <div
-                  className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                  className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
                     msg.role === 'user'
-                      ? 'bg-blue-900 text-white rounded-br-md'
-                      : 'bg-gray-100 text-gray-800 rounded-bl-md'
+                      ? 'bg-gray-900 text-white rounded-br-md'
+                      : 'bg-white text-gray-800 rounded-bl-md shadow-sm border border-gray-100'
                   }`}
                 >
                   {msg.content}
                 </div>
               </div>
             ))}
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-white rounded-2xl rounded-bl-md shadow-sm border border-gray-100">
+                  <TypingDots />
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="border-t border-gray-100 p-3">
+          <div className="border-t border-gray-100 p-3 bg-white">
             <div className="flex gap-2 mb-2 flex-wrap">
-              <button onClick={() => handleQuickQuestion('What properties do you have?')} className="px-3 py-1.5 text-xs font-medium text-blue-900 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors">
+              <button onClick={() => handleQuickQuestion('What properties do you have?')} className="px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-full transition-colors">
                 Properties
               </button>
-              <button onClick={() => handleQuickQuestion('What are your services?')} className="px-3 py-1.5 text-xs font-medium text-blue-900 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors">
+              <button onClick={() => handleQuickQuestion('What are your services?')} className="px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-full transition-colors">
                 Services
               </button>
-              <button onClick={() => handleQuickQuestion('How can I contact you?')} className="px-3 py-1.5 text-xs font-medium text-blue-900 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors">
+              <button onClick={() => handleQuickQuestion('How can I contact you?')} className="px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-full transition-colors">
                 Contact
               </button>
             </div>
@@ -169,9 +201,9 @@ export default function Chatbot() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Type your question..."
-                className="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900"
+                className="flex-1 px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400"
               />
-              <button onClick={handleSend} className="px-4 py-2.5 bg-blue-900 hover:bg-blue-800 text-white rounded-xl transition-colors">
+              <button onClick={handleSend} className="px-4 py-2.5 bg-gray-900 hover:bg-gray-800 text-white rounded-xl transition-all hover:shadow-lg">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                 </svg>
@@ -183,7 +215,7 @@ export default function Chatbot() {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-blue-900 hover:bg-blue-800 text-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gray-950 hover:bg-gray-800 text-white rounded-full shadow-xl hover:shadow-2xl transition-all flex items-center justify-center hover:scale-105 active:scale-95"
         aria-label="Chat"
       >
         {isOpen ? (
