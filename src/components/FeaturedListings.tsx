@@ -181,17 +181,16 @@ export default function FeaturedListings() {
   const [selected, setSelected] = useState<typeof allListings[number] | null>(null)
 
   useEffect(() => {
-    const update = () => {
-      const params = new URLSearchParams(window.location.search)
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail
       setFilters({
-        location: params.get('location') || '',
-        type: params.get('type') || '',
-        price: params.get('price') || '',
+        location: detail.location || '',
+        type: detail.type || '',
+        price: detail.price || '',
       })
     }
-    update()
-    window.addEventListener('popstate', update)
-    return () => window.removeEventListener('popstate', update)
+    window.addEventListener('search-filters', handler)
+    return () => window.removeEventListener('search-filters', handler)
   }, [])
 
   const filtered = useMemo(() => {

@@ -24,16 +24,16 @@ export default function Hero() {
   const [price, setPrice] = useState(prices[0])
 
   const handleSearch = () => {
-    const params = new URLSearchParams()
     const loc = cleanLabel(location)
     const typ = cleanLabel(type)
     const prc = priceValues[price]
-    if (loc) params.set('location', loc)
-    if (typ) params.set('type', typ)
-    if (prc && prc !== 'any') params.set('price', prc)
-    const qs = params.toString()
-    window.history.pushState(null, '', qs ? `?${qs}` : window.location.pathname)
-    window.dispatchEvent(new PopStateEvent('popstate'))
+    window.dispatchEvent(new CustomEvent('search-filters', {
+      detail: {
+        location: loc,
+        type: typ,
+        price: prc && prc !== 'any' ? prc : '',
+      }
+    }))
     document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' })
   }
 
