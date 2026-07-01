@@ -75,8 +75,12 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="py-24 lg:py-32">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" className="py-24 lg:py-32 relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-amber-100/40 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl" />
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="text-sm font-semibold text-amber-600 uppercase tracking-[0.2em]">Our Services</span>
           <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">
@@ -87,22 +91,27 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {services.map((service) => (
             <div
               key={service.title}
-              className="group relative p-[1px] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl"
+              className="group relative p-[1px] rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-gray-900/10 hover:-translate-y-1"
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-gray-200 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative p-6 bg-white rounded-2xl h-full">
-                <div className={`w-12 h-12 ${service.lightBg} ${service.lightText} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                  {service.icon}
+              <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+              <div className="relative p-6 lg:p-8 bg-white rounded-2xl h-full group-hover:bg-white/95 transition-colors duration-500">
+                <div className={`w-14 h-14 ${service.lightBg} ${service.lightText} rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:shadow-lg transition-all duration-300`}>
+                  <div className="relative">
+                    <div className={`absolute inset-0 ${service.lightBg} blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                    <div className="relative">
+                      {service.icon}
+                    </div>
+                  </div>
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-gray-900">{service.title}</h3>
-                <p className="mt-2 text-sm text-gray-500 leading-relaxed">{service.description}</p>
-                <div className="mt-4 flex items-center gap-1 text-sm font-medium text-gray-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <h3 className="mt-5 text-lg font-semibold text-gray-900 group-hover:text-gray-800 transition-colors">{service.title}</h3>
+                <p className="mt-2 text-sm text-gray-500 leading-relaxed group-hover:text-gray-600 transition-colors">{service.description}</p>
+                <div className="mt-5 flex items-center gap-1.5 text-sm font-medium text-gray-900 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0 -translate-x-2">
                   Learn more
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </div>
