@@ -163,12 +163,12 @@ export default function FeaturedListings() {
         </div>
 
         <div className="mt-14 text-center">
-          <button className="px-10 py-3.5 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-xl transition-all hover:shadow-xl hover:shadow-gray-900/25 inline-flex items-center gap-2">
+          <a href="#listings" className="px-10 py-3.5 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-xl transition-all hover:shadow-xl hover:shadow-gray-900/25 inline-flex items-center gap-2">
             View All Properties
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-          </button>
+          </a>
         </div>
       </div>
     </section>
