@@ -422,6 +422,21 @@ export default function FeaturedListings() {
                 </div>
                 <span className="text-3xl font-bold text-gray-900 tracking-tight">{selected.price}</span>
               </div>
+
+              <div className="mt-6 pt-6 border-t border-gray-100 flex gap-3">
+                <button
+                  onClick={() => { setSelected(null); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) }}
+                  className="flex-1 py-3 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-xl transition-all hover:shadow-lg hover:shadow-gray-900/25"
+                >
+                  Inquire About This Property
+                </button>
+                <button
+                  onClick={() => setSelected(null)}
+                  className="px-6 py-3 text-sm font-semibold text-gray-700 border border-gray-200 hover:border-gray-300 rounded-xl transition-all hover:bg-gray-50"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>
