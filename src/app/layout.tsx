@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "EstateHub — Find Your Dream Home",
   description: "Premium real estate services. Discover exceptional properties in prime locations. We help you find the perfect place to call home.",
   icons: {
-    icon: '/favicon.svg',
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
   },
 };
 
@@ -30,6 +30,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
