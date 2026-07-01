@@ -164,7 +164,8 @@ export default function FeaturedListings() {
     })
   }, [filters])
 
-  const displayed = showAll ? filtered : filtered.slice(0, 6)
+  const hasFilters = filters.location || filters.type || filters.price
+  const displayed = showAll ? filtered : hasFilters ? filtered.slice(0, 4) : filtered.slice(0, 6)
 
   return (
     <section id="listings" className="py-24 lg:py-32 bg-gray-50">
@@ -275,7 +276,7 @@ export default function FeaturedListings() {
         </div>
         )}
 
-        {filtered.length > 0 && filtered.length > 6 && (
+        {filtered.length > 0 && filtered.length > (hasFilters ? 4 : 6) && (
         <div className="mt-14 text-center">
           <button
             onClick={() => setShowAll(!showAll)}
