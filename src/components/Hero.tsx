@@ -1,4 +1,9 @@
+"use client";
 export default function Hero() {
+  const handleSearch = () => {
+    document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <section id="home" className="relative min-h-screen flex items-center pt-16 lg:pt-20 overflow-hidden">
       <div className="absolute inset-0 -z-10">
@@ -65,7 +70,7 @@ export default function Hero() {
                   </select>
                 </div>
                 <div className="flex items-end">
-                  <button className="w-full py-2.5 text-sm font-semibold text-gray-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25">
+                  <button onClick={handleSearch} className="w-full py-2.5 text-sm font-semibold text-gray-900 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
