@@ -1,6 +1,38 @@
 "use client";
+import { useState } from "react";
+
+const locations = ['Any Location', 'New York, NY', 'Los Angeles, CA', 'Miami, FL', 'Chicago, IL']
+const types = ['All Types', 'House', 'Apartment', 'Villa', 'Condo']
+const prices = ['Any Price', '$100k — $300k', '$300k — $500k', '$500k — $1M', '$1M+']
+
+const priceValues: Record<string, string> = {
+  'Any Price': 'any',
+  '$100k — $300k': '100k-300k',
+  '$300k — $500k': '300k-500k',
+  '$500k — $1M': '500k-1M',
+  '$1M+': '1M+',
+}
+
+function cleanLabel(v: string) {
+  if (v === 'Any Location' || v === 'All Types' || v === 'Any Price') return ''
+  return v
+}
+
 export default function Hero() {
+  const [location, setLocation] = useState(locations[0])
+  const [type, setType] = useState(types[0])
+  const [price, setPrice] = useState(prices[0])
+
   const handleSearch = () => {
+    const params = new URLSearchParams()
+    const loc = cleanLabel(location)
+    const typ = cleanLabel(type)
+    const prc = priceValues[price]
+    if (loc) params.set('location', loc)
+    if (typ) params.set('type', typ)
+    if (prc && prc !== 'any') params.set('price', prc)
+    const qs = params.toString()
+    window.history.pushState(null, '', qs ? `?${qs}` : window.location.pathname)
     document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' })
   }
 
@@ -42,31 +74,20 @@ export default function Hero() {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-white/60 uppercase tracking-wider mb-1.5">Location</label>
-                  <select className="w-full text-sm text-white bg-white/10 border border-white/10 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-400/40 appearance-none cursor-pointer">
-                    <option className="text-gray-900">New York, NY</option>
-                    <option className="text-gray-900">Los Angeles, CA</option>
-                    <option className="text-gray-900">Miami, FL</option>
-                    <option className="text-gray-900">Chicago, IL</option>
+                  <select value={location} onChange={(e) => setLocation(e.target.value)} className="w-full text-sm text-white bg-white/10 border border-white/10 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-400/40 appearance-none cursor-pointer">
+                    {locations.map((l) => <option key={l} className="text-gray-900" value={l}>{l}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-white/60 uppercase tracking-wider mb-1.5">Property Type</label>
-                  <select className="w-full text-sm text-white bg-white/10 border border-white/10 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-400/40 appearance-none cursor-pointer">
-                    <option className="text-gray-900">All Types</option>
-                    <option className="text-gray-900">House</option>
-                    <option className="text-gray-900">Apartment</option>
-                    <option className="text-gray-900">Villa</option>
-                    <option className="text-gray-900">Condo</option>
+                  <select value={type} onChange={(e) => setType(e.target.value)} className="w-full text-sm text-white bg-white/10 border border-white/10 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-400/40 appearance-none cursor-pointer">
+                    {types.map((t) => <option key={t} className="text-gray-900" value={t}>{t}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-white/60 uppercase tracking-wider mb-1.5">Price Range</label>
-                  <select className="w-full text-sm text-white bg-white/10 border border-white/10 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-400/40 appearance-none cursor-pointer">
-                    <option className="text-gray-900">Any Price</option>
-                    <option className="text-gray-900">$100k — $300k</option>
-                    <option className="text-gray-900">$300k — $500k</option>
-                    <option className="text-gray-900">$500k — $1M</option>
-                    <option className="text-gray-900">$1M+</option>
+                  <select value={price} onChange={(e) => setPrice(e.target.value)} className="w-full text-sm text-white bg-white/10 border border-white/10 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-400/40 appearance-none cursor-pointer">
+                    {prices.map((p) => <option key={p} className="text-gray-900" value={p}>{p}</option>)}
                   </select>
                 </div>
                 <div className="flex items-end">

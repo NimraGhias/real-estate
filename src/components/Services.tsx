@@ -164,22 +164,22 @@ export default function Services() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
                   </span>
-                  <button className={`px-4 py-2 text-xs font-semibold text-white bg-gradient-to-r ${service.gradient} rounded-xl hover:shadow-lg transition-all hover:scale-105`}>
+                  <a href={`/consultation?service=${encodeURIComponent(service.title)}`} className={`px-4 py-2 text-xs font-semibold text-white bg-gradient-to-r ${service.gradient} rounded-xl hover:shadow-lg transition-all hover:scale-105 inline-block`}>
                     Get Started
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-16 text-center">
-          <div className="inline-flex items-center gap-3 px-6 py-3 bg-gray-900 text-white rounded-2xl shadow-xl hover:shadow-2xl hover:bg-gray-800 transition-all cursor-pointer group">
+          <div className="mt-16 text-center">
+          <a href="/consultation" className="inline-flex items-center gap-3 px-6 py-3 bg-gray-900 text-white rounded-2xl shadow-xl hover:shadow-2xl hover:bg-gray-800 transition-all cursor-pointer group">
             <span className="text-sm font-semibold">Schedule a Free Consultation</span>
             <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-          </div>
+          </a>
         </div>
       </div>
     </section>

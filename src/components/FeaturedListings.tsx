@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 
-const listings = [
+const allListings = [
   {
     id: 1,
     title: 'Modern Villa with Ocean View',
     location: 'Malibu, California',
+    type: 'Villa',
     price: '$4,800,000',
     beds: 5,
     baths: 4,
@@ -18,6 +19,7 @@ const listings = [
     id: 2,
     title: 'Luxury Downtown Penthouse',
     location: 'New York, NY',
+    type: 'Apartment',
     price: '$3,200,000',
     beds: 3,
     baths: 3,
@@ -30,6 +32,7 @@ const listings = [
     id: 3,
     title: 'Elegant Suburban Estate',
     location: 'Greenwich, CT',
+    type: 'House',
     price: '$6,500,000',
     beds: 7,
     baths: 6,
@@ -42,6 +45,7 @@ const listings = [
     id: 4,
     title: 'Waterfront Family Home',
     location: 'Miami Beach, FL',
+    type: 'House',
     price: '$2,950,000',
     beds: 4,
     baths: 3,
@@ -54,6 +58,7 @@ const listings = [
     id: 5,
     title: 'Contemporary City Apartment',
     location: 'San Francisco, CA',
+    type: 'Apartment',
     price: '$1,850,000',
     beds: 2,
     baths: 2,
@@ -66,6 +71,7 @@ const listings = [
     id: 6,
     title: 'Historic Brownstone',
     location: 'Boston, MA',
+    type: 'House',
     price: '$5,100,000',
     beds: 6,
     baths: 4,
@@ -78,6 +84,7 @@ const listings = [
     id: 7,
     title: 'Mountain Retreat Cabin',
     location: 'Aspen, CO',
+    type: 'House',
     price: '$3,600,000',
     beds: 4,
     baths: 3,
@@ -90,6 +97,7 @@ const listings = [
     id: 8,
     title: 'Minimalist Urban Loft',
     location: 'Chicago, IL',
+    type: 'Apartment',
     price: '$1,200,000',
     beds: 2,
     baths: 2,
@@ -102,6 +110,7 @@ const listings = [
     id: 9,
     title: 'Mediterranean Villa',
     location: 'Santa Barbara, CA',
+    type: 'Villa',
     price: '$7,800,000',
     beds: 6,
     baths: 5,
@@ -112,9 +121,50 @@ const listings = [
   },
 ]
 
+function parsePrice(p: string) {
+  const num = parseFloat(p.replace(/[$,]/g, ''))
+  if (num >= 1000000) return '1M+'
+  if (num >= 500000) return '500k-1M'
+  if (num >= 300000) return '300k-500k'
+  if (num >= 100000) return '100k-300k'
+  return 'any'
+}
+
 export default function FeaturedListings() {
   const [showAll, setShowAll] = useState(false)
-  const displayed = showAll ? listings : listings.slice(0, 6)
+  const [filters, setFilters] = useState({ location: '', type: '', price: '' })
+
+  useEffect(() => {
+    const update = () => {
+      const params = new URLSearchParams(window.location.search)
+      setFilters({
+        location: params.get('location') || '',
+        type: params.get('type') || '',
+        price: params.get('price') || '',
+      })
+    }
+    update()
+    window.addEventListener('popstate', update)
+    return () => window.removeEventListener('popstate', update)
+  }, [])
+
+  const filtered = useMemo(() => {
+    return allListings.filter((p) => {
+      if (filters.location && !p.location.toLowerCase().includes(filters.location.toLowerCase())) return false
+      if (filters.type && p.type !== filters.type) return false
+      if (filters.price && filters.price !== 'any') {
+        const range = filters.price
+        const num = parseFloat(p.price.replace(/[$,]/g, ''))
+        if (range === '100k-300k' && (num < 100000 || num >= 300000)) return false
+        if (range === '300k-500k' && (num < 300000 || num >= 500000)) return false
+        if (range === '500k-1M' && (num < 500000 || num >= 1000000)) return false
+        if (range === '1M+' && num < 1000000) return false
+      }
+      return true
+    })
+  }, [filters])
+
+  const displayed = showAll ? filtered : filtered.slice(0, 6)
 
   return (
     <section id="listings" className="py-24 lg:py-32 bg-gray-50">
@@ -129,6 +179,26 @@ export default function FeaturedListings() {
           </p>
         </div>
 
+        {filtered.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900">No properties match your search</h3>
+            <p className="mt-1 text-sm text-gray-500">Try adjusting your filters or browsing all listings.</p>
+            <button
+              onClick={() => {
+                window.history.pushState(null, '', window.location.pathname)
+                setFilters({ location: '', type: '', price: '' })
+              }}
+              className="mt-6 px-6 py-2.5 text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 rounded-xl transition-all"
+            >
+              Clear Filters
+            </button>
+          </div>
+        ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {displayed.map((property) => (
             <div
@@ -203,7 +273,9 @@ export default function FeaturedListings() {
             </div>
           ))}
         </div>
+        )}
 
+        {filtered.length > 0 && filtered.length > 6 && (
         <div className="mt-14 text-center">
           <button
             onClick={() => setShowAll(!showAll)}
@@ -215,6 +287,7 @@ export default function FeaturedListings() {
             </svg>
           </button>
         </div>
+        )}
       </div>
     </section>
   )
